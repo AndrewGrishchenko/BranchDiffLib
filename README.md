@@ -30,7 +30,7 @@ typedef struct MessageStruct {
 `sudo make install`
 
 ### Note
-On ALT Linux, the library might not be visible to programs. To fix this, open the file '/etc/ld.so.conf.d/local.conf` in any text editor and add the following lines:
+On ALT Linux, the library might not be visible to programs. To fix this, open the file `/etc/ld.so.conf.d/local.conf` in any text editor and add the following lines:
 ```
 /usr/local/lib
 /usr/local/lib64
