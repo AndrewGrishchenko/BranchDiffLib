@@ -56,16 +56,6 @@ void cleanupMessageStruct (MessageStruct* pMem) {
     free(pMem);
 }
 
-
-int dotCount (char* s) {
-    int count = 0;
-    int size = strlen(s);
-    for (int i = 0; i < size; i++) {
-        if (s[i] == '.') count++;
-    }
-    return count;
-}
-
 char** str_split(char* s, int *size) {
     int str_size = strlen(s);
     char new_s[str_size];
