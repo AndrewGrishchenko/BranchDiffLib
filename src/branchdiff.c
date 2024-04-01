@@ -57,6 +57,14 @@ void cleanupMessageStruct (MessageStruct* pMem) {
 }
 
 
+int dotCount (char* s) {
+    int count = 0;
+    int size = strlen(s);
+    for (int i = 0; i < size; i++) {
+        if (s[i] == '.') count++;
+    }
+    return count;
+}
 
 char** str_split(char* s, int *size) {
     int str_size = strlen(s);
@@ -67,20 +75,25 @@ char** str_split(char* s, int *size) {
     for (int i = 0; i < str_size; i++) {
         if (s[i] == '.') partCount++;
     }
+
     *size = partCount;
 
     char** ans = (char**) malloc(sizeof(char*) * partCount);
 
-    char *ptr = strtok(new_s, ".");
+    if (partCount == 1) {
+        ans[0] = (char*) malloc(sizeof(char) * str_size);
+        strcpy(ans[0], s);
+    } else {
+        char *ptr = strtok(new_s, ".");
 
-    while (ptr != NULL) {
-        ans[index] = (char*) malloc(sizeof(char) * strlen(ptr));
-        strcpy(ans[index], ptr);
-        index++;
+        while (ptr != NULL) {
+            ans[index] = (char*) malloc(sizeof(char) * strlen(ptr));
+            strcpy(ans[index], ptr);
+            index++;
 
-        ptr = strtok(NULL, ".");
+            ptr = strtok(NULL, ".");
+        }
     }
-
     return ans;
 }
 
@@ -117,14 +130,15 @@ int ctoi_compare (char* c1, char* c2) {
 }
 
 int compare_versions(char* version1, char* version2) {
-    int tokenParts1, tokenParts2;
+    int tokenParts1 = 1;
     char** tokens1 = str_split(version1, &tokenParts1);
+    
+    int tokenParts2 = 1;
     char** tokens2 = str_split(version2, &tokenParts2);
-
+    
     int token_size = (tokenParts1 < tokenParts2) ? tokenParts1 : tokenParts2;
 
     for (int i = 0; i < token_size; i++) {
-
         int result = ctoi_compare(tokens1[i], tokens2[i]);
         if (result != 0) return result;
     }
@@ -135,8 +149,7 @@ int compare_versions(char* version1, char* version2) {
 
 
 void versionDiff (MessageStruct* packages1, int packages1Num, MessageStruct* packages2, int packages2Num, MessageStruct** responseVals, int* responseNumVals) {
-    if (packages1Num > packages2Num) *responseNumVals = packages1Num;
-    else *responseNumVals = packages2Num;
+    *responseNumVals = packages1Num;
     
     *responseVals = (MessageStruct*) malloc (sizeof(MessageStruct) * (*responseNumVals));
     memset(*responseVals, 0, sizeof(MessageStruct) * (*responseNumVals));
@@ -152,18 +165,11 @@ void versionDiff (MessageStruct* packages1, int packages1Num, MessageStruct* pac
         for (int j = last_known; j < packages2Num; j++) {
             if (strcmp(packages1[i].name, packages2[j].name) == 0
             && strcmp(packages1[i].arch, packages2[j].arch) == 0) {
-                int compare = compare_versions(packages1[i].version, packages2[j].version);
                 if (compare_versions(packages1[i].version, packages2[j].version) > 0) {
                     (*responseVals)[current_index].name = packages1[i].name;
                     (*responseVals)[current_index].arch = packages1[i].arch;
                     (*responseVals)[current_index].version = packages1[i].version;
                     current_index++;
-
-                    puts("package");
-                    puts(packages1[i].name);
-                    puts(packages1[i].version);
-                    puts(packages2[j].version);
-                    puts("\n");
                 }
                 break;
             }
