@@ -8,8 +8,10 @@ A package is represented by the following structure:
 ```c
 typedef struct MessageStruct {
     char* name;
-    char* arch;
+    int epoch;
     char* version;
+    char* release;
+    char* arch;
 } MessageStruct;
 ```
 
