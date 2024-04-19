@@ -47,8 +47,10 @@ void presenceDiff (MessageStruct* packages1, int packages1Num, MessageStruct* pa
         }
         if (present == 0) {
             (*responseVals)[current_index].name = packages1[i].name;
-            (*responseVals)[current_index].arch = packages1[i].arch;
+            (*responseVals)[current_index].epoch = packages1[i].epoch;
             (*responseVals)[current_index].version = packages1[i].version;
+            (*responseVals)[current_index].release = packages1[i].release;
+            (*responseVals)[current_index].arch = packages1[i].arch;
             current_index++;
         }
     }
@@ -88,8 +90,10 @@ void versionDiff (MessageStruct* packages1, int packages1Num, MessageStruct* pac
                 if (compare_versions(packages1[i].epoch, packages1[i].version, packages1[i].release, 
                 packages2[j].epoch, packages2[j].version, packages2[j].release) > 0) {
                     (*responseVals)[current_index].name = packages1[i].name;
-                    (*responseVals)[current_index].arch = packages1[i].arch;
+                    (*responseVals)[current_index].epoch = packages1[i].epoch;
                     (*responseVals)[current_index].version = packages1[i].version;
+                    (*responseVals)[current_index].release = packages1[i].release;
+                    (*responseVals)[current_index].arch = packages1[i].arch;
                     current_index++;
                 }
                 break;
