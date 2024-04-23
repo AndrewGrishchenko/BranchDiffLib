@@ -23,7 +23,8 @@ char *__strdup (const char *s) {
 static int message_name_comparator(const void *a, const void *b) {
     const MessageStruct *p1 = (MessageStruct*) a;
     const MessageStruct *p2 = (MessageStruct*) b;
-    return strcmp(p1->name, p2->name);
+    if (strcmp(p1->name, p2->name) == 0) return strcmp(p1->arch, p2->arch);
+	else return strcmp(p1->name, p2->name);
 }
 
 void sort_messages(MessageStruct arr[], int n) {
@@ -44,16 +45,23 @@ void presenceDiff (MessageStruct* packages1, int packages1Num, MessageStruct* pa
     for (int i = 0; i < packages1Num; i++) {
         int present = 0;
         for (int j = last_known; j < packages2Num; j++) {
-            if (strcmp(packages1[i].name, packages2[j].name) < 0) {
+            int name_cmp = strcmp(packages1[i].name, packages2[j].name);
+			int arch_cmp = strcmp(packages1[i].arch, packages2[j].arch);
+
+			if (name_cmp < 0) {
                 last_known = j;
                 break;
             }
             
-            if (strcmp(packages1[i].name, packages2[j].name) == 0
-            && strcmp(packages1[i].arch, packages2[j].arch) == 0) {
-                present = 1;
-                break;
-            }
+			if (name_cmp == 0) {
+				if (arch_cmp < 0) {
+					last_known = j;
+					break;
+				} else if (arch_cmp == 0) {
+					present = 1;
+					break;	
+				}
+			}
         }
         if (present == 0) {
             (*responseVals)[current_index].name = strdup(packages1[i].name);
